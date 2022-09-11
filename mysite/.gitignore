@@ -1,0 +1,11 @@
+# ignore the environmental variables files
+**/envs
+
+# ignore start file
+./start
+
+# ignore SQLite files
+./db.sqlite
+
+# ignore Python cache files
+./__pycache__/
