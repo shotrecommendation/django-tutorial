@@ -19,4 +19,4 @@ class QuestionDetailViewTests(TestCase):
         """
         past_question = create_question(question_text="Past question.", days=-30)
         response = self.client.get(reverse("polls:detail", args=(past_question.id,)))
-        self.assertContains(response, "Past question.")
+        self.assertContains(response, past_question.question_text)
