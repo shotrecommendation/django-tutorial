@@ -54,3 +54,24 @@ class QuestionIndexViewTests(TestCase):
         self.assertQuerysetEqual(
             response.context["latest_question_list"], [past_question_2, past_question_1]
         )
+
+    def test_question_with_no_choices(self):
+        """
+        The question index page does not display questions with no choices.
+        """
+        question_with_no_choices = create_question(
+            question_text="Question with no choices", days=-10, choices=()
+        )
+        response = self.client.get(reverse("polls:index"))
+        self.assertQuerysetEqual(response.context["latest_question_list"], [])
+
+    def test_question_with_one_choice(self):
+        """
+        The question index page does not display questions with less than two choices.
+        """
+        question_with_one_choice = create_question(
+            question_text="Question with one choice", days=-10, choices=(["choice 1"])
+        )
+        response = self.client.get(reverse("polls:index"))
+        self.assertEqual(question_with_one_choice.choice_set.count(), 1)
+        self.assertQuerysetEqual(response.context["latest_question_list"], [])

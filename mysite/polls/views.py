@@ -1,4 +1,4 @@
-from django.db.models import F
+from django.db.models import Count, F
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -13,10 +13,13 @@ class IndexView(generic.ListView):
     context_object_name = "latest_question_list"
 
     def get_queryset(self):
-        """Return the last 5 published questions (excluding the questions to be published in the future)."""
-        return Question.objects.filter(pub_date__lte=timezone.now()).order_by(
-            "-pub_date"
-        )[:5]
+        """
+        Return the last 5 published questions (excluding the questions to be published in the future and questions with less than 2 choices).
+        """
+        questions = Question.objects.annotate(num_choices=Count("choice")).filter(
+            pub_date__lte=timezone.now(), num_choices__gte=2
+        )
+        return questions.order_by("-pub_date")[:5]
 
 
 class DetailView(generic.DetailView):
