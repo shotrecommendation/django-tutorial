@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Question
+from .models import Choice, Question
 
 
 class ChoiceInline(admin.TabularInline):
@@ -14,7 +14,7 @@ class QuestionAdmin(admin.ModelAdmin):
     list_filter = ["pub_date"]
     search_fields = ["question_text"]
     fieldsets = [
-        (None, {"fields": ["queston_text"]}),
+        (None, {"fields": ["question_text"]}),
         ("Date information", {"fields": ["pub_date"]}),
     ]
     inlines = [ChoiceInline]
